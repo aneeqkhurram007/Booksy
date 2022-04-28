@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
-import { auth } from '../firebase'
+import { auth, db } from '../firebase'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { Alert, Button, Input, Switch } from 'antd'
 import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { setUserType } from '../slices/userSlice'
+import { collection, getDocs, query, where } from 'firebase/firestore'
 const Login = () => {
     const navigate = useNavigate()
     const user = useSelector(state => state.user)
@@ -29,6 +30,17 @@ const Login = () => {
     const loginUser = async (e) => {
         e.preventDefault()
         try {
+            let docs;
+            if (user.userType === "User") {
+                docs = await getDocs(query(collection(db, "users"), where("email", "==", state.email)))
+            }
+            else {
+                docs = await getDocs(query(collection(db, "authors"), where("email", "==", state.email)))
+
+            }
+            if (!docs.docs.length) {
+                throw new Error("User does not exist")
+            }
             await signInWithEmailAndPassword(auth, state.email, state.password)
             setalertMessage({
                 type: "success",

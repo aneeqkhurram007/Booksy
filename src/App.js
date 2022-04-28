@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom"
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import { useDispatch } from "react-redux";
-import { setUserAuth } from "./slices/userSlice";
+import { setUserAuth, setUserType } from "./slices/userSlice";
 function App() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
@@ -17,6 +17,9 @@ function App() {
         navigate("/login", { replace: true })
       }
       else {
+        dispatch(setUserType({
+          type: user.displayName
+        }))
         dispatch(setUserAuth({
           userAuth: {
             email: user.email,
@@ -26,8 +29,10 @@ function App() {
         }))
       }
     })
-    return unsubscribe
-  }, [])
+    return () => unsubscribe
+  }, [auth.currentUser])
+
+
 
   const routes = useRoutes(appRoutes)
   return (

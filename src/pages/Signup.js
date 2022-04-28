@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { auth, db } from '../firebase'
-import { createUserWithEmailAndPassword } from 'firebase/auth'
+import { createUserWithEmailAndPassword, updateCurrentUser, updateProfile } from 'firebase/auth'
 import { Alert, Button, Input, Select, Switch } from 'antd'
 import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
@@ -42,12 +42,20 @@ const Signup = () => {
                     userType: user.userType,
                     timestamp: serverTimestamp()
                 })
+                console.log(auth.currentUser)
+                await updateProfile(auth.currentUser, {
+                    displayName: "User"
+                })
             }
             else {
                 await setDoc(doc(db, "authors", data.user.uid), {
                     ...stateData,
                     userType: user.userType,
                     timestamp: serverTimestamp()
+                })
+                console.log(auth.currentUser)
+                await updateProfile(auth.currentUser, {
+                    displayName: "Author"
                 })
             }
             setalertMessage({

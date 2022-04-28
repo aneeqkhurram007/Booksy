@@ -1,14 +1,11 @@
-import IndexAuthor from "../pages/IndexAuthor";
-import IndexUser from "../pages/IndexUser"
+import Index from "../pages/Index";
 import Login from "../pages/Login";
 import Signup from "../pages/Signup";
-import store from "../store/store"
-const state = store.getState();
 
 const appRoutes = [
     {
         path: "/",
-        element: state.user.userType === "User" ? <IndexUser /> : <IndexAuthor />
+        element: <Index />
     },
     {
         path: "/login",

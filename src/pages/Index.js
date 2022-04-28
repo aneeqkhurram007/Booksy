@@ -1,7 +1,10 @@
 import React, { useEffect } from 'react'
-import { useNavigate } from 'react-router'
 import { useSelector } from 'react-redux'
-const IndexAuthor = () => {
+import { useNavigate } from 'react-router'
+import IndexAuthor from './IndexAuthor'
+import IndexUser from './IndexUser'
+
+const Index = () => {
     const navigate = useNavigate()
     const user = useSelector(state => state.user)
     useEffect(() => {
@@ -9,10 +12,13 @@ const IndexAuthor = () => {
             navigate("/login", { replace: true })
         }
     }, [user.userAuth])
-
     return (
-        <div>IndexAuthor</div>
+        <div>
+            {
+                user?.userType === "User" ? <IndexUser /> : <IndexAuthor />
+            }
+        </div>
     )
 }
 
-export default IndexAuthor
+export default Index
