@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { auth } from '../firebase'
 import { onAuthStateChanged } from 'firebase/auth'
 import { useNavigate } from 'react-router'
-const IndexUser = () => {
+const IndexAuthor = () => {
     const navigate = useNavigate()
     useEffect(() => {
         onAuthStateChanged(auth, (user) => {
@@ -13,8 +13,8 @@ const IndexUser = () => {
     }, [])
 
     return (
-        <div>IndexUser</div>
+        <div>IndexAuthor</div>
     )
 }
 
-export default IndexUser
+export default IndexAuthor
