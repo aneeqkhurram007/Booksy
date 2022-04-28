@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { auth } from '../firebase'
-import { onAuthStateChanged, signInWithEmailAndPassword } from 'firebase/auth'
+import { signInWithEmailAndPassword } from 'firebase/auth'
 import { Alert, Button, Input, Switch } from 'antd'
 import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
@@ -16,12 +16,10 @@ const Login = () => {
         password: ""
     })
     useEffect(() => {
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                navigate("/", { replace: true })
-            }
-        })
-    }, [])
+        if (user.userAuth) {
+            navigate("/", { replace: true })
+        }
+    }, [user.userAuth])
     useEffect(() => {
         setTimeout(() => {
             setalertMessage(null)

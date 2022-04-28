@@ -3,16 +3,27 @@ import { useRoutes } from "react-router-dom"
 import { useEffect } from "react";
 import { auth } from "./firebase"
 import { onAuthStateChanged } from "firebase/auth"
-import { useNavigate, useLocation } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import { useDispatch } from "react-redux";
+import { setUserAuth } from "./slices/userSlice";
 function App() {
   const navigate = useNavigate()
-  const location = useLocation()
+  const dispatch = useDispatch()
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (!user) {
         navigate("/login", { replace: true })
+      }
+      else {
+        dispatch(setUserAuth({
+          userAuth: {
+            email: user.email,
+            displayName: user.displayName,
+            uid: user.uid
+          }
+        }))
       }
     })
     return unsubscribe

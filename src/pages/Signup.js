@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { auth, db } from '../firebase'
-import { createUserWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth'
+import { createUserWithEmailAndPassword } from 'firebase/auth'
 import { Alert, Button, Input, Select, Switch } from 'antd'
 import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
@@ -20,12 +20,10 @@ const Signup = () => {
         password: ""
     })
     useEffect(() => {
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                navigate("/", { replace: true })
-            }
-        })
-    }, [])
+        if (user.userAuth) {
+            navigate("/", { replace: true })
+        }
+    }, [user.userAuth])
 
     useEffect(() => {
         setTimeout(() => {
