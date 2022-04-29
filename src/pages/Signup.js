@@ -28,7 +28,7 @@ const Signup = () => {
     useEffect(() => {
         setTimeout(() => {
             setalertMessage(null)
-        }, 2000);
+        }, 5000);
     }, [alertMessage])
 
     const signupUser = async (e) => {
@@ -64,7 +64,7 @@ const Signup = () => {
             })
             setTimeout(() => {
                 navigate("/", { replace: true })
-            }, 3000);
+            }, 6000);
         } catch (error) {
             console.log(error)
             setalertMessage({
