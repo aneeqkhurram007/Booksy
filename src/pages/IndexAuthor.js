@@ -1,16 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { useDispatch, useSelector } from 'react-redux'
-import { getDoc, doc, addDoc, collection, serverTimestamp, updateDoc } from "firebase/firestore"
+import { getDoc, doc, addDoc, collection, serverTimestamp, updateDoc, getDocs, query, where } from "firebase/firestore"
 import { db, storage } from "../firebase"
 import { setUserData } from '../slices/userSlice'
 import { Alert, Button, Input } from 'antd'
 import { getDownloadURL, ref, upload, uploadBytes } from 'firebase/storage'
+import { ReloadOutlined } from "@ant-design/icons"
+import BookCards from '../components/BookCards'
 const IndexAuthor = () => {
     const navigate = useNavigate()
     const user = useSelector(state => state.user)
     const dispatch = useDispatch()
+    const [refresh, setrefresh] = useState(false)
     const [hidden, sethidden] = useState(true)
+    const [books, setbooks] = useState([])
     const [book, setbook] = useState({
         title: "",
         genre: "",
@@ -21,6 +25,7 @@ const IndexAuthor = () => {
         numberOfPages: 1,
         volumes: 0
     })
+    const { userData } = user
     const [alertMessage, setalertMessage] = useState(null)
     useEffect(() => {
         if (!user.userAuth) {
@@ -42,14 +47,29 @@ const IndexAuthor = () => {
                 }
             }
             getUserData()
+            setrefresh(false)
         }
     }, [user.userAuth])
+    useEffect(() => {
+        async function getBooks() {
+            try {
+                const books = await getDocs(query(collection(db, "books"), where("author_email", "==", userData.email)))
+                setbooks(books.docs.map(book => ({ id: book.id, ...book.data() })))
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        if (userData) {
+            getBooks()
+
+        }
+    }, [refresh, userData])
+
     useEffect(() => {
         setTimeout(() => {
             setalertMessage(null)
         }, 5000);
     }, [alertMessage])
-    const { userData } = user
     const changeHandler = (e) => {
         setbook({ ...book, [e.target.name]: e.target.value })
     }
@@ -109,8 +129,9 @@ const IndexAuthor = () => {
     return (
         <div className='min-h-screen p-4 bg-slate-100'>
             <h1 className='text-2xl text-center font-semibold'>Welcome {userData?.firstName} {userData?.lastName}</h1>
+            <Button icon={<ReloadOutlined />} className="bg-blue-400 " onClick={() => setrefresh(!refresh)}>Refresh</Button>
             <h3 className='text-xl underline underline-offset-4 my-2 font-semibold'>Books uploaded by you.</h3>
-
+            <BookCards books={books} />
             <Button type="primary" onClick={() => sethidden(false)} className="bg-blue-400" size="large" >Add a new book</Button>
             {
                 alertMessage?.type === "success" && (<Alert type='success' message={alertMessage.message} />)}
