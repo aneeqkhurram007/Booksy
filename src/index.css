@@ -6,3 +6,6 @@
 *{
     font-family: 'Radio Canada', sans-serif ;
 }
+    .ant-btn-primary{
+        background-color: #1890ff;
+    }
