@@ -21,9 +21,11 @@ const BookCards = ({ books }) => {
             <Row justify='space-between px-2'>
                 <div>{
                     books.map(book => (
-                        <Col key={book.id} className="my-4 cursor-pointer" onClick={() => navigateToReviewPage(book)}>
-                            <Card className='transition-transform hover:scale-90 border rounded-lg flex flex-col justify-center items-center' size="default" bordered={true} >
-                                <img className='w-44 h-44 mx-auto' src={book?.imageDownloadUrl} />
+                        <Col key={book.id} className="my-4 cursor-pointer" >
+                            <Card className=' border transition-transform hover:scale-105 rounded-lg flex flex-col justify-center items-center' size="default"
+                                bordered={true} >
+                                <img className='w-44 h-44 mx-auto'
+                                    onClick={() => navigateToReviewPage(book)} src={book?.imageDownloadUrl} />
                                 <h4 className="text-lg font-semibold">
                                     {book.title}
                                 </h4>
